@@ -164,7 +164,26 @@ contract StonksTest is Test {
     }
 
     /**
-     * @notice Fuzz-est the placeOrder function of the Stonks contract
+     * @notice A helper function that implements the missing functionality of vm.expectRevert()
+     *   We cannot pss the partial revert to expectRevert: https://github.com/foundry-rs/foundry/issues/3725
+     *   Here, we assume that the call is expected to revert with a custom error with arbitrary parameters.
+     *   We only check if the selector of the custom error matches the expected selector.
+     *   Reverts if the call succeeds or if the selector does not match the expected one.
+     * @param callee The called contract.
+     * @param data Low-level data passed to callee.call().
+     * @param expectedSelector The selector of the expected custom error.
+     */
+    function _expectRevertWithCustomErrorSelector(address callee, bytes memory data, bytes4 expectedSelector) internal {
+        (bool success, bytes memory returnData) = callee.call(data);
+        require(!success, "Call expected to revert succeeded.");
+        require(returnData.length >= 4, "The reverted call returned no data.");
+        bytes4 receivedSelector;
+        assembly { receivedSelector := mload(add(returnData, 0x20)) }
+        assertEq(expectedSelector, receivedSelector);
+    }
+
+    /**
+     * @notice Fuzz-test the placeOrder function of the Stonks contract
      * @param sellTokenIndex The index of the sell token (bound to [0, SELL_TOKENS.length - 1])
      * @param buyTokenIndex The index of the buy token (bound to [0, BUY_TOKENS.length - 1])
      * @param sellAmount The amount of the sell token (bound to [11, 10000 ether])
@@ -221,8 +240,14 @@ contract StonksTest is Test {
         
         if (sellAmount <= 10) {
             // Dust trades are not allowed, Stonks will revert
-            vm.expectRevert(/*Stonks.MinimumPossibleBalanceNotMet.selector*/);
-            orderAddress = Stonks(stonksAddress).placeOrder(minBuyAmount);
+            // Simplified version without error selector validation:
+            //   vm.expectRevert(/*Stonks.MinimumPossibleBalanceNotMet.selector*/);
+            //   orderAddress = Stonks(stonksAddress).placeOrder(minBuyAmount);
+            _expectRevertWithCustomErrorSelector(
+                stonksAddress,
+                abi.encodeCall(Stonks.placeOrder, (minBuyAmount)),
+                Stonks.MinimumPossibleBalanceNotMet.selector
+            );
             return;
         } else if (0 == _computeBuyAmountWithoutMargin(
             sellAmount,
@@ -232,8 +257,14 @@ contract StonksTest is Test {
             buyDecimals
         )) {
             // The buy amount should be greater than zero, otherwise Stonks reverts
-            vm.expectRevert(/*AmountConverter.InvalidExpectedOutAmount.selector*/);
-            orderAddress = Stonks(stonksAddress).placeOrder(minBuyAmount);
+            // Simplified version without error selector validation:
+            //   vm.expectRevert(/*AmountConverter.InvalidExpectedOutAmount.selector*/);
+            //   orderAddress = Stonks(stonksAddress).placeOrder(minBuyAmount);
+            _expectRevertWithCustomErrorSelector(
+                stonksAddress,
+                abi.encodeCall(Stonks.placeOrder, (minBuyAmount)),
+                AmountConverter.InvalidExpectedOutAmount.selector
+            );
             return;
         }
 
@@ -265,15 +296,26 @@ contract StonksTest is Test {
         assertEq(bytes32(actualSignature), bytes32(expectedSignature));
 
         // The order is created and not expired, token recovery is not possible
-        vm.expectRevert(/*Order.OrderNotExpired.selector*/);
-        // wake-disable-next-line
-        Order(orderAddress).recoverTokenFrom();
+        // Simplified version without error selector validation:
+        //   vm.expectRevert(/*Order.OrderNotExpired.selector*/);
+        //   Order(orderAddress).recoverTokenFrom();
+        _expectRevertWithCustomErrorSelector(
+            orderAddress,
+            abi.encodeCall(Order.recoverTokenFrom, ()),
+            Order.OrderNotExpired.selector
+        );
 
         // Set the timestamp after the order expiration
         vm.warp(block.timestamp + orderDuration + 1);
-        vm.expectRevert(/*Order.OrderNotExpired.selector*/);
-        // wake-disable-next-line
-        Order(orderAddress).isValidSignature(orderHash, "");
+
+        // Simplified version without error selector validation:
+        //   vm.expectRevert(/*Order.OrderExpired.selector*/);
+        //   Order(orderAddress).isValidSignature(orderHash, "");
+        _expectRevertWithCustomErrorSelector(
+            orderAddress,
+            abi.encodeCall(Order.isValidSignature, (orderHash, "")),
+            Order.OrderExpired.selector
+        );
 
         // Must succeed - order expired
         vm.startPrank(makeAddr("randomActor"));
