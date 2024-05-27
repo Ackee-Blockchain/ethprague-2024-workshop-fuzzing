@@ -1,6 +1,6 @@
-# Uncover Hidden Bugs with Fuzzing Workshop
+# What the Fuzz? Find Bugs in Your Solidity Code!
 
-Brought to you with ❤️ by [Ackee Blockchain Security](https://ackeeblockchain.com) and authored by [Andrey Babushkin](https://babushkin.xyz).
+This workshop is brought to you with ❤️ by [Ackee Blockchain Security](https://ackeeblockchain.com) and authored by [Andrey Babushkin](https://babushkin.xyz).
 
 If you have any questions or need help, feel free to reach out at any time!
 
@@ -57,7 +57,7 @@ For this workshop, we simplify things a little (but like really a little). We do
     wake init pytypes
     ```
 
-8. Open the `tests/test_fuzz.py` file and rewrite the fuzz test to use the `Wake` framework.
+8. Open the `tests/test_fuzz.py` file and rewrite the fuzz test to use the `Wake` framework. The reference test implementation can be found in `tests/test_fuzz_solution.py`.
 9. Run the fuzz test with:
 
     ```bash
