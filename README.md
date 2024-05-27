@@ -45,22 +45,28 @@ For this workshop, we simplify things a little (but like really a little). We do
 3. In VSCode, install the [Tools for Solidity (Wake)](https://marketplace.visualstudio.com/items?itemName=AckeeBlockchain.tools-for-solidity) extension.
 4. Explore the `contracts` folder to understand the Stonks protocol.
 5. Explore a fuzz test for the Stonks protocol written for use with Foundry in `tests/Foundry.t.sol`.
-6. Create `pytypes` for the Stonks protocol using the `Wake` framework:
+6. (optional) Foundry fuzz test can be run with:
+
+    ```bash
+    forge test --fork-url https://ethereum-rpc.publicnode.com -vvv
+    ```
+
+7. Create `pytypes` for the Stonks protocol using the `Wake` framework:
 
     ```bash
     wake init pytypes
     ```
 
-7. Open the `tests/test_fuzz.py` file and rewrite the fuzz test to use the `Wake` framework.
-8. Run the fuzz test with:
+8. Open the `tests/test_fuzz.py` file and rewrite the fuzz test to use the `Wake` framework.
+9. Run the fuzz test with:
 
     ```bash
     wake test
     ```
 
-9. Analyze the results and understand the bug that causes the test to fail.
-10. Fix the bug in the Stonks protocol.
-11. Run the fuzz test again to ensure the bug is fixed.
-12. Celebrate your success!
-13. Share your experience with the workshop on social media and tag us [@AckeeBlockchain](https://x.com/AckeeBlockchain) and [@CyberBabushkin](https://x.com/CyberBabushkin).
-14. Enjoy the rest of the conference!
+10. Analyze the results and understand the bug that causes the test to fail.
+11. Fix the bug in the Stonks protocol.
+12. Run the fuzz test again to ensure the bug is fixed.
+13. Celebrate your success!
+14. Share your experience with the workshop on social media and tag us [@CyberBabushkin](https://x.com/CyberBabushkin) and [@AckeeBlockchain](https://x.com/AckeeBlockchain).
+15. Enjoy the rest of the conference!
