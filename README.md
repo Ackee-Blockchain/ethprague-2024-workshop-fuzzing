@@ -1,6 +1,6 @@
 # Uncover Hidden Bugs with Fuzzing Workshop
 
-Brought to you with ❤️ by [Ackee Blockchain Security](https://ackeeblockchain.com) and authored by [Andrey Babushkin](https://x.com/CyberBabushkin).
+Brought to you with ❤️ by [Ackee Blockchain Security](https://ackeeblockchain.com) and authored by [Andrey Babushkin](https://babushkin.xyz).
 
 If you have any questions or need help, feel free to reach out at any time!
 
@@ -37,11 +37,11 @@ For this workshop, we simplify things a little (but like really a little). We do
 1. Clone this repository:
 
     ```bash
-    git clone --recurse-submodules git@github.com:Ackee-Blockchain/workshop-ethereumzurich-fuzzing.git
-    cd workshop-ethereumzurich-fuzzing
+    git clone --recurse-submodules git@github.com:Ackee-Blockchain/ethprague-2024-workshop-fuzzing.git
+    cd ethprague-2024-workshop-fuzzing
     ```
 
-2. Open the `workshop-ethereumzurich-fuzzing` folder in VSCode.
+2. Open the `ethprague-2024-workshop-fuzzing` folder in VSCode.
 3. In VSCode, install the [Tools for Solidity (Wake)](https://marketplace.visualstudio.com/items?itemName=AckeeBlockchain.tools-for-solidity) extension.
 4. Explore the `contracts` folder to understand the Stonks protocol.
 5. Explore a fuzz test for the Stonks protocol written for use with Foundry in `tests/Foundry.t.sol`.
